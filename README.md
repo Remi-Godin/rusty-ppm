@@ -27,14 +27,14 @@ GPU2: NVIDIA Quadro T1000 Mobile
 Testing methodology: Each function was timed and ran for a total of 10 times each. Results were averaged.
 
 #### Writing/Reading a 4k(3840 × 2160) image (8,294,400 Pixels):
-Average `read_ppm` speed (plain text `.ppm` image): 277.071ms
-Average `read_ppm` speed (binary `.ppm` image): 35.603ms
-Average `write_ppm` speed: 48.378ms
+- Average `read_ppm` speed (plain text `.ppm` image): **277.071ms**
+- Average `read_ppm` speed (binary `.ppm` image): **35.603ms**
+- Average `write_ppm` speed: **48.378ms**
 
 #### Writing/Reading a 10,000 x 10,000 image (100,000,000 Pixels):
-Average `read_ppm` speed (plain text `.ppm` image): 3.928s 
-Average `read_ppm` speed (binary `.ppm` image): 570.408ms
-Average `write_ppm` speed: 655.232ms
+- Average `read_ppm` speed (plain text `.ppm` image): **3.928s** 
+- Average `read_ppm` speed (binary `.ppm` image): **570.408ms**
+- Average `write_ppm` speed: **655.232ms**
 
 ---
 
