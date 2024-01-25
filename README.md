@@ -47,5 +47,3 @@ It also turns out that this is my first crate and I thought it would be a great 
 I haven't tested the performance of using `Vector3<u8>` as opposed to other integer type, but from my understanding, it is possible that certain CPU architecture might perform better with different types of intger, such as `u32`.
 
 I haven't created a function to write a plain text `.ppm` image as I didn't see the need to yet. Writing and reading plain text images is much slower than binary images.
-
-Currently, version is `0.1.0`. Once I have used it more extensively and tested it further, I will promote it to version `1.0.0`.
