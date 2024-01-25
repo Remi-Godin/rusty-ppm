@@ -25,3 +25,4 @@
 pub mod ppm_writer;
 pub mod ppm_reader;
 pub mod canvas;
+pub mod utils;

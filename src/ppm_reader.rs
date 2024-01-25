@@ -17,7 +17,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#![allow(unused)]
 use std::path::Path;
 use std::fs::{read, read_to_string};
 use std::slice::Iter;
@@ -25,30 +24,46 @@ use cgmath::vec3;
 
 use crate::canvas::*;
 
+#[derive(Debug)]
+pub enum PpmReaderError{
+    ImageHeaderCouldNotBeRead,
+    ImageDoesNotExistAtPath
+}
+
+impl std::error::Error for PpmReaderError{}
+impl std::fmt::Display for PpmReaderError{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "There was an error when trying to read an image file.")
+    }
+}
+
 /// This function reads from a PPM file and outputs a Canvas object containing its data.
 ///
 /// Example usage:
 /// ```Rust
 /// let new_canvas: Canvas = read_to_canvas(Path::new("./my_image.ppm"));
 /// ```
-pub fn read_to_canvas(path: &Path) -> Option<Canvas> {
-    if path.try_exists().unwrap() {
+pub fn read_ppm(path: &Path) -> Result<Canvas, Box<dyn std::error::Error>> {
+    if path.try_exists()? {
         let mut file_name = path.file_name().unwrap().to_str().unwrap().to_string();
         file_name.truncate(file_name.len()-4);
-        let file = read(path).unwrap();
+        let file = read(path)?;
         let mut file_iter: Iter<'_, u8> = file.iter();
         let mut header: String = "".to_string();
         header.push(*file_iter.next().unwrap() as char);
         header.push(*file_iter.next().unwrap() as char);
         file_iter.next(); // skip newline
         if header.eq("P6") {
-            return Some(read_binary_image(file_name, &mut file_iter));
+            return Ok(read_binary_image(file_name, &mut file_iter));
         }
-        if header.eq("P3") {
-            return Some(read_string_image(file_name, path));
+        else if header.eq("P3") {
+            return Ok(read_string_image(file_name, path));
+        } else {
+            Err(Box::new(PpmReaderError::ImageHeaderCouldNotBeRead))
         }
+    } else {
+        Err(Box::new(PpmReaderError::ImageDoesNotExistAtPath))
     }
-    None
 }
 
 /// This function parses a string ppm file and creates a Canvas from it
@@ -63,14 +78,14 @@ fn read_string_image(file_name: String,path: &Path) -> Canvas {
     if size != width * height && size % 3 != 0 {
         println!("Actual size: {} * {} = {}", width, height, width * height);
         println!("Iter size: {}", size);
-        panic!("Size issue")
+        panic!("Some pixel data seems to be missing or the file might be corrupted.")
     };
-    let mut canvas = Canvas::new_empty(&file_name, width, height);
-    for _i in 0..(width * height) {
-        canvas.push(&vec3(file_iter.next().unwrap().parse::<u8>().unwrap(),
+    let mut canvas = Canvas::new(&file_name, width, height);
+    for pixel in canvas.iter_mut() {
+        *pixel = vec3(file_iter.next().unwrap().parse::<u8>().unwrap(),
             file_iter.next().unwrap().parse::<u8>().unwrap(),
             file_iter.next().unwrap().parse::<u8>().unwrap()
-        ))
+        )
     }
     canvas
 
@@ -100,8 +115,8 @@ fn read_binary_image(file_name: String, file_iter: &mut Iter<'_, u8>) -> Canvas 
         panic!("Size issue")
     }
     let mut canvas = Canvas::new(&file_name, width, height);
-    for _i in 0..(width * height) {
-        canvas.push(&vec3(*file_iter.next().unwrap(), *file_iter.next().unwrap(), *file_iter.next().unwrap()))
+    for pixel in canvas.iter_mut() {
+        *pixel = vec3(*file_iter.next().unwrap(), *file_iter.next().unwrap(), *file_iter.next().unwrap());
     }
     canvas
 }

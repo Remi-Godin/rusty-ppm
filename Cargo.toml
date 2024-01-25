@@ -1,13 +1,17 @@
 [package]
 name = "rusty-ppm"
+authors = ["Remi A. Godin"]
 version = "0.1.0"
 edition = "2021"
-description = "A simple PPM image renderer"
+description = "A simple PPM image reader and writer"
+repository = "https://github.com/Remi-Godin/rusty-ppm"
+license = "MIT License"
 keywords = [
     "ppm",
     "renderer",
     "image",
-    "rendering"
+    "read",
+    "write"
 ]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
