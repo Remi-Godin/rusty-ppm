@@ -1,6 +1,8 @@
 # rusty-ppm
 A crate to provide writing and reading functionality for `.ppm` images.
 
+![sample_binary_image](https://github.com/Remi-Godin/rusty-ppm/assets/129818497/15000b17-c427-4b51-b789-85f11d1b2ca2)
+
 The library provides:
 
 - The `canvas` module: Contains the `Canvas` struct which holds the pixel data of the image you are working on, as well as the functions necessary to access and mutate its data.
