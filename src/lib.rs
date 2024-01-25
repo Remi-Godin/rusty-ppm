@@ -21,7 +21,6 @@
 //! A simple ppm renderer. Allows to create images pixel by pixel and then render them out as ppm
 //! images.
 
-/// The main and only module of this crate
 pub mod ppm_writer;
 pub mod ppm_reader;
 pub mod canvas;
