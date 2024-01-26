@@ -20,31 +20,42 @@
 use crate::canvas::*;
 use std::fs;
 use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::Path;
+use crate::utils::complete_path;
 
 /// Writes the image data to the specified path 
 ///
-/// Takes a path string and writes the image to the path.
+/// Takes a directory and file name and writes the image to that directory.
 ///
-/// If an image already exist with the specified name, it will create a copy. Up to 100 copy can
-/// be created if you wish to, but a better practice would be to use unique names.
+/// If an image already exist with the specified name, it will be overwritten.
+/// 
+/// The file path and file name are separate to allow for easier file management.
 ///
 /// Example usage: 
 /// ```Rust
 /// let my_path = Path::new("./");
-/// write_to_file(&my_path);
+/// let my_canvas = Canvas::new(500, 500);
+/// write_to_file(&my_canvas, &my_path, "my_image_name");
 /// ```
-pub fn write_ppm(canvas: &Canvas, folder_path: &Path, file_name: &str) -> Result<(), Box<dyn std::error::Error>> {
-    let mut full_path: PathBuf = PathBuf::new();
-    full_path.push(folder_path);
-    full_path.set_file_name(file_name);
-    full_path.set_extension("ppm");
+pub fn write_binary_ppm(canvas: &Canvas, directory: &Path, file_name: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let full_path = complete_path(directory, file_name);
 
     let mut file: fs::File = fs::File::create(full_path)?;
     let _ = file.write_all(&format!("P6\n{} {}\n255\n", canvas.width, canvas.height).as_bytes());
     let mut temp: Vec<u8> = Vec::with_capacity(canvas.width * canvas.height * 3);
     canvas.iter().for_each(|e| {temp.push(e.x); temp.push(e.y); temp.push(e.z)});
     let _ = file.write_all(&temp);
+
+    Ok(())
+}
+
+pub fn write_string_ppm(canvas: &Canvas, directory: &Path, file_name: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let full_path = complete_path(directory, file_name);
+
+    let mut file = fs::File::create(full_path)?;
+    file.write_all(&format!("P3\n{} {}\n255\n", canvas.width, canvas.height).as_bytes())?;
+    canvas.iter().for_each(|e| {file.write_all((&format!("{} {} {}\n", e.x, e.y, e.z)).as_bytes()).unwrap()});
+
 
     Ok(())
 }

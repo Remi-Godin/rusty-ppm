@@ -21,6 +21,7 @@ use std::path::Path;
 use std::fs::{read, read_to_string};
 use std::slice::Iter;
 use cgmath::vec3;
+use crate::utils::complete_path;
 
 use crate::canvas::*;
 
@@ -37,15 +38,17 @@ impl std::fmt::Display for PpmReaderError{
     }
 }
 
-/// This function reads from a PPM file and outputs a Canvas object containing its data.
+/// This function reads from a .ppm file at the specified path and outputs a Canvas object containing its data.
 ///
 /// Example usage:
 /// ```Rust
 /// let new_canvas: Canvas = read_to_canvas(Path::new("./my_image.ppm"));
 /// ```
-pub fn read_ppm(path: &Path) -> Result<Canvas, Box<dyn std::error::Error>> {
-    if path.try_exists()? {
-        let file = read(path)?;
+pub fn read_ppm(directory: &Path, file_name: &str) -> Result<Canvas, Box<dyn std::error::Error>> {
+    let full_path = complete_path(directory, file_name);
+
+    if full_path.try_exists()? {
+        let file = read(&full_path)?;
         let mut file_iter: Iter<'_, u8> = file.iter();
         let mut header: String = "".to_string();
         header.push(*file_iter.next().unwrap() as char);
@@ -55,7 +58,7 @@ pub fn read_ppm(path: &Path) -> Result<Canvas, Box<dyn std::error::Error>> {
             return Ok(read_binary_image(&mut file_iter));
         }
         else if header.eq("P3") {
-            return Ok(read_string_image(path));
+            return Ok(read_string_image(&full_path));
         } else {
             Err(Box::new(PpmReaderError::ImageHeaderCouldNotBeRead))
         }

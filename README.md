@@ -8,7 +8,7 @@ The library provides:
 - The `canvas` module: Contains the `Canvas` struct which holds the pixel data of the image you are working on, as well as the functions necessary to access and mutate its data.
 - The `ppm_writer` module: Contains functions to write your canvas into a `.ppm` image.
 - The `ppm_reader` module: Contains functions to read `.ppm` images and convert it into a `Canvas`.
-- The `utils` module: Contains functions to create sample `.ppm` images. Good for testing.
+- The `utils` module: Contains functions to create sample `.ppm` images as well as helper functions.
 
 ## Inner workings
 The `Canvas` struct is implemented as a single array as opposed to a 2D array. After running some tests, this method did allow for a small performance improvement. The `ppm_writer` module provides the `write_ppm` function, which takes a `Canvas` and writes it to a binary `.ppm` file. The `ppm_reader` module provides the `read_ppm` function, which can take either a plain text `.ppm` image, or a binary `.ppm` image and convert it into a `Canvas` to be used by the user.
@@ -47,5 +47,3 @@ It also turns out that this is my first crate and I thought it would be a great 
 
 ## Notes
 I haven't tested the performance of using `Vector3<u8>` as opposed to other integer type, but from my understanding, it is possible that certain CPU architecture might perform better with different types of intger, such as `u32`.
-
-I haven't created a function to write a plain text `.ppm` image as I didn't see the need to yet. Writing and reading plain text images is much slower than binary images.
