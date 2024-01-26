@@ -11,7 +11,7 @@ The library provides:
 - The `utils` module: Contains functions to create sample `.ppm` images as well as helper functions.
 
 ## Inner workings
-The `Canvas` struct is implemented as a single array as opposed to a 2D array. After running some tests, this method did allow for a small performance improvement. The `ppm_writer` module provides the `write_ppm` function, which takes a `Canvas` and writes it to a binary `.ppm` file. The `ppm_reader` module provides the `read_ppm` function, which can take either a plain text `.ppm` image, or a binary `.ppm` image and convert it into a `Canvas` to be used by the user.
+The `Canvas` struct is implemented as a single array as opposed to a 2D array. After running some tests, this method did allow for a small performance improvement. The `ppm_writer` module provides the writing functions, which takes a `Canvas` and writes it to a binary or plain text `.ppm` file. The `ppm_reader` module provides the reading functions, which can take either a plain text `.ppm` image, or a binary `.ppm` image and convert it into a `Canvas` to be used by the user.
 
 The pixel data inside the `Canvas` is made up of `Vector3<u8>`, using the `cgmath` crate `Vector3` struct. In order to interact with the image, you will most likely need to import the `cgmath` crate.
 
