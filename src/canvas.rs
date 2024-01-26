@@ -24,11 +24,8 @@ use cgmath::{Vector3,vec3};
 /// # Arguments
 ///
 /// `data`          The actual data, stored as a single vec of Vector3<u8>
-/// `height`        the height of the image in pixels
-/// `file_name`     the name of the image
-/// `image_data`    holds the raw image data until it is written to an actual file 
-/// `max_size`      the number of pixels the image can hold 
-/// `current_size`  the current number of pixel that have been written
+/// `width`         The width of the image in pixels
+/// `height`        The height of the image in pixels
 ///
 /// # Note
 /// The canvas is basically an inline matrix representation of an image. Each subsequent element of
@@ -38,19 +35,15 @@ use cgmath::{Vector3,vec3};
 #[derive(Clone)]
 pub struct Canvas {
     pub data: Vec<Vector3<u8>>,
-    pub name: String,
     pub width: usize,
     pub height: usize,
-    pub size: usize
 }
 
 impl Canvas {
-    pub fn new(name: &str, width: usize, height: usize) -> Canvas {
+    pub fn new(width: usize, height: usize) -> Canvas {
         let mut canvas = Canvas {
-            name: name.to_string(),
             width,
             height,
-            size: width * height,
             data: Vec::with_capacity(width * height)
         };
         let zero = vec3(0,0,0);
@@ -61,18 +54,24 @@ impl Canvas {
     }
 
 
+    /// Return the pixel value at the specified row and column.
     pub fn get(&self, row: usize, col: usize) -> Option<&Vector3<u8>> {
         self.data.get(row * self.width + col)
     }
 
+    /// Return a mutable reference to the pixel at the specified row and column.
     pub fn get_mut(&mut self, row: usize, col: usize) -> Option<&mut Vector3<u8>> {
         self.data.get_mut(row * self.width + col)
     }
 
+    /// Returns an iterator over all the pixels in the canvas, starting from top left, scanning
+    /// left to right, top to bottom.
     pub fn iter(&self) -> core::slice::Iter<Vector3<u8>> {
         self.data.iter()
     }
 
+    /// Returns a mutable iterator over all the pixels in the canvas, starting from top left,
+    /// scanning left ot right, top to bottom.
     pub fn iter_mut(&mut self) -> core::slice::IterMut<Vector3<u8>> {
         self.data.iter_mut()
     }

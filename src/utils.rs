@@ -20,33 +20,39 @@
 
 #![allow(unused)]
 use crate::canvas::Canvas;
-use std::path::Path;
+use crate::ppm_writer::*;
+use std::path::{Path, PathBuf};
 use std::fs;
 use cgmath::vec3;
 use std::io::Write;
 
 
-pub fn generate_sample_string_image(width: usize, height: usize) {
-    let mut image = format!("P3\n{} {}\n255\n", width, height);
-    let mut my_file = fs::File::create(Path::new("./sample_string_image.ppm")).unwrap();
+pub fn generate_sample_string_image(width: usize, height: usize, directory: &Path, file_name: &str) {
+    let mut image = Canvas::new(width, height);
     for row in 0..height {
         for col in 0..width {
-            image.push_str(&format!("{} {} {}\n", (row*256/height) as u8, (col*256/width) as u8, 0))
+            *image.get_mut(row, col).unwrap() = vec3((row*256/image.height) as u8, (col*256/image.width) as u8, 0);
         }
     }
-    my_file.write_all(image.as_bytes());
+    write_string_ppm(&image, directory, file_name);
+    
 }
 
-pub fn generate_sample_binary_image(width: usize, height: usize) {
-    let mut image = Canvas::new("sample_binary_image", width, height);
-    let mut my_file = fs::File::create(Path::new("./sample_binary_image.ppm")).unwrap();
+pub fn generate_sample_binary_image(width: usize, height: usize, directory: &Path, file_name: &str) {
+    let mut image = Canvas::new(width, height);
     for row in 0..image.height {
         for col in 0..image.width {
             *image.get_mut(row, col).unwrap() = vec3((row*256/image.height) as u8, (col*256/image.width) as u8, 0);
         }
     }
-    my_file.write_all(&format!("P6\n{} {}\n255\n", image.width, image.height).as_bytes());
-    let mut temp: Vec<u8> = Vec::with_capacity(image.width * image.height * 3);
-    image.iter().for_each(|e| {temp.push(e.x); temp.push(e.y); temp.push(e.z)});
-    my_file.write_all(&temp);
+    write_binary_ppm(&image, directory, file_name);
+}
+
+pub fn complete_path(directory: &Path, file_name: &str) -> PathBuf {
+    let mut full_path = PathBuf::new();
+    full_path.push(directory);
+    full_path.set_file_name(file_name);
+    full_path.set_extension("ppm");
+    full_path
+
 }
