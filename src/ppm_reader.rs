@@ -43,10 +43,8 @@ impl std::fmt::Display for PpmReaderError{
 /// ```Rust
 /// let new_canvas: Canvas = read_to_canvas(Path::new("./my_image.ppm"));
 /// ```
-pub fn read_ppm(path: &Path) -> Result<(Canvas, String), Box<dyn std::error::Error>> {
+pub fn read_ppm(path: &Path) -> Result<Canvas, Box<dyn std::error::Error>> {
     if path.try_exists()? {
-        let mut file_name = path.file_name().unwrap().to_str().unwrap().to_string();
-        file_name.truncate(file_name.len()-4);
         let file = read(path)?;
         let mut file_iter: Iter<'_, u8> = file.iter();
         let mut header: String = "".to_string();
@@ -54,10 +52,10 @@ pub fn read_ppm(path: &Path) -> Result<(Canvas, String), Box<dyn std::error::Err
         header.push(*file_iter.next().unwrap() as char);
         file_iter.next(); // skip newline
         if header.eq("P6") {
-            return Ok(read_binary_image(file_name, &mut file_iter));
+            return Ok(read_binary_image(&mut file_iter));
         }
         else if header.eq("P3") {
-            return Ok(read_string_image(file_name, path));
+            return Ok(read_string_image(path));
         } else {
             Err(Box::new(PpmReaderError::ImageHeaderCouldNotBeRead))
         }
@@ -67,7 +65,7 @@ pub fn read_ppm(path: &Path) -> Result<(Canvas, String), Box<dyn std::error::Err
 }
 
 /// This function parses a string ppm file and creates a Canvas from it
-fn read_string_image(file_name: String,path: &Path) -> (Canvas, String) {
+fn read_string_image(path: &Path) -> Canvas {
     let file = read_to_string(path).unwrap();
     let mut file_iter = file.split([' ', '\n']);
     file_iter.next(); //skip header
@@ -87,12 +85,12 @@ fn read_string_image(file_name: String,path: &Path) -> (Canvas, String) {
             file_iter.next().unwrap().parse::<u8>().unwrap()
         )
     }
-    (canvas, file_name)
+    canvas
 
 }
 
 /// This function parses a binary ppm file and creates a Canvas from it
-fn read_binary_image(file_name: String, file_iter: &mut Iter<'_, u8>) -> (Canvas, String) {
+fn read_binary_image(file_iter: &mut Iter<'_, u8>) -> Canvas {
     let width_iter = file_iter.cloned().take_while(|e| (*e <= 57 && *e >= 48));
     let mut width_str: String = "".to_string();
     width_iter.for_each(|e| width_str.push(e as char));
@@ -118,5 +116,5 @@ fn read_binary_image(file_name: String, file_iter: &mut Iter<'_, u8>) -> (Canvas
     for pixel in canvas.iter_mut() {
         *pixel = vec3(*file_iter.next().unwrap(), *file_iter.next().unwrap(), *file_iter.next().unwrap());
     }
-    (canvas, file_name)
+    canvas
 }
