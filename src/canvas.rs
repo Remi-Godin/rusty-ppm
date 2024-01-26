@@ -38,16 +38,14 @@ use cgmath::{Vector3,vec3};
 #[derive(Clone)]
 pub struct Canvas {
     pub data: Vec<Vector3<u8>>,
-    pub name: String,
     pub width: usize,
     pub height: usize,
     pub size: usize
 }
 
 impl Canvas {
-    pub fn new(name: &str, width: usize, height: usize) -> Canvas {
+    pub fn new(width: usize, height: usize) -> Canvas {
         let mut canvas = Canvas {
-            name: name.to_string(),
             width,
             height,
             size: width * height,

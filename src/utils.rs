@@ -38,7 +38,7 @@ pub fn generate_sample_string_image(width: usize, height: usize) {
 }
 
 pub fn generate_sample_binary_image(width: usize, height: usize) {
-    let mut image = Canvas::new("sample_binary_image", width, height);
+    let mut image = Canvas::new(width, height);
     let mut my_file = fs::File::create(Path::new("./sample_binary_image.ppm")).unwrap();
     for row in 0..image.height {
         for col in 0..image.width {

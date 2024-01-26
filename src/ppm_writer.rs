@@ -34,10 +34,10 @@ use std::path::{Path, PathBuf};
 /// let my_path = Path::new("./");
 /// write_to_file(&my_path);
 /// ```
-pub fn write_ppm(canvas: &Canvas, folder_path: &Path) -> Result<(), Box<dyn std::error::Error>> {
+pub fn write_ppm(canvas: &Canvas, folder_path: &Path, file_name: &str) -> Result<(), Box<dyn std::error::Error>> {
     let mut full_path: PathBuf = PathBuf::new();
     full_path.push(folder_path);
-    full_path.set_file_name(&canvas.name);
+    full_path.set_file_name(file_name);
     full_path.set_extension("ppm");
 
     let mut file: fs::File = fs::File::create(full_path)?;
