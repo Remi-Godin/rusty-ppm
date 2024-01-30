@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-//! A simple ppm renderer. Allows to create images pixel by pixel and then render them out as ppm
-//! images.
+//! A simple ppm renderer. Allows to create images pixel by pixel and then render them out as
+//! `.ppm` images.
 
 pub mod ppm_writer;
 pub mod ppm_reader;
-pub mod canvas;
 pub mod utils;
+pub mod prelude;

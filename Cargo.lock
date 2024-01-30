@@ -38,7 +38,14 @@ dependencies = [
 
 [[package]]
 name = "rusty-ppm"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "cgmath",
+ "simple-canvas",
 ]
+
+[[package]]
+name = "simple-canvas"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "696ddfb6e47c6385d473cee7179d16cd7e930c5512e8e52e47634ffbd5b95152"

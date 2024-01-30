@@ -17,11 +17,14 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-use crate::canvas::*;
 use std::fs;
 use std::io::Write;
 use std::path::Path;
+
 use crate::utils::complete_path;
+
+use cgmath::Vector3;
+use simple_canvas::Canvas;
 
 /// Writes the image data to the specified path 
 ///
@@ -34,10 +37,10 @@ use crate::utils::complete_path;
 /// Example usage: 
 /// ```Rust
 /// let my_path = Path::new("./");
-/// let my_canvas = Canvas::new(500, 500);
+/// let my_canvas = Canvas<Vector3<u8>>::new(500, 500);
 /// write_to_file(&my_canvas, &my_path, "my_image_name");
 /// ```
-pub fn write_binary_ppm(canvas: &Canvas, directory: &Path, file_name: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub fn write_binary_ppm(canvas: &Canvas<Vector3<u8>>, directory: &Path, file_name: &str) -> Result<(), Box<dyn std::error::Error>> {
     let full_path = complete_path(directory, file_name);
 
     let mut file: fs::File = fs::File::create(full_path)?;
@@ -49,7 +52,7 @@ pub fn write_binary_ppm(canvas: &Canvas, directory: &Path, file_name: &str) -> R
     Ok(())
 }
 
-pub fn write_string_ppm(canvas: &Canvas, directory: &Path, file_name: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub fn write_string_ppm(canvas: &Canvas<Vector3<u8>>, directory: &Path, file_name: &str) -> Result<(), Box<dyn std::error::Error>> {
     let full_path = complete_path(directory, file_name);
 
     let mut file = fs::File::create(full_path)?;
