@@ -19,16 +19,16 @@
 // SOFTWARE.
 
 #![allow(unused)]
-use crate::canvas::Canvas;
 use crate::ppm_writer::*;
 use std::path::{Path, PathBuf};
 use std::fs;
-use cgmath::vec3;
 use std::io::Write;
 
+use cgmath::{vec3, Vector3};
+use simple_canvas::Canvas;
 
 pub fn generate_sample_string_image(width: usize, height: usize, directory: &Path, file_name: &str) {
-    let mut image = Canvas::new(width, height);
+    let mut image: Canvas<Vector3<u8>> = Canvas::new(width, height, vec3(0,0,0));
     for row in 0..height {
         for col in 0..width {
             *image.get_mut(row, col).unwrap() = vec3((row*256/image.height) as u8, (col*256/image.width) as u8, 0);
@@ -39,7 +39,7 @@ pub fn generate_sample_string_image(width: usize, height: usize, directory: &Pat
 }
 
 pub fn generate_sample_binary_image(width: usize, height: usize, directory: &Path, file_name: &str) {
-    let mut image = Canvas::new(width, height);
+    let mut image: Canvas<Vector3<u8>> = Canvas::new(width, height, vec3(0,0,0));
     for row in 0..image.height {
         for col in 0..image.width {
             *image.get_mut(row, col).unwrap() = vec3((row*256/image.height) as u8, (col*256/image.width) as u8, 0);

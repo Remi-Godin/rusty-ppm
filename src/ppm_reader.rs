@@ -20,10 +20,11 @@
 use std::path::Path;
 use std::fs::{read, read_to_string};
 use std::slice::Iter;
-use cgmath::vec3;
-use crate::utils::complete_path;
 
-use crate::canvas::*;
+use cgmath::{Vector3,vec3};
+use simple_canvas::Canvas;
+
+use crate::utils::complete_path;
 
 #[derive(Debug)]
 pub enum PpmReaderError{
@@ -38,13 +39,13 @@ impl std::fmt::Display for PpmReaderError{
     }
 }
 
-/// This function reads from a .ppm file at the specified path and outputs a Canvas object containing its data.
+/// This function reads from a .ppm file at the specified path and outputs a `Canvas<Vector3<u8>>` object containing its data.
 ///
 /// Example usage:
 /// ```Rust
-/// let new_canvas: Canvas = read_to_canvas(Path::new("./my_image.ppm"));
+/// let new_canvas: Canvas<Vector3<u8>> = read_to_canvas(Path::new("./my_image.ppm"));
 /// ```
-pub fn read_ppm(directory: &Path, file_name: &str) -> Result<Canvas, Box<dyn std::error::Error>> {
+pub fn read_ppm(directory: &Path, file_name: &str) -> Result<Canvas<Vector3<u8>>, Box<dyn std::error::Error>> {
     let full_path = complete_path(directory, file_name);
 
     if full_path.try_exists()? {
@@ -67,8 +68,8 @@ pub fn read_ppm(directory: &Path, file_name: &str) -> Result<Canvas, Box<dyn std
     }
 }
 
-/// This function parses a string ppm file and creates a Canvas from it
-fn read_string_image(path: &Path) -> Canvas {
+/// This function parses a string ppm file and creates a `Canvas<Vector3<u8>>` from it
+fn read_string_image(path: &Path) -> Canvas<Vector3<u8>> {
     let file = read_to_string(path).unwrap();
     let mut file_iter = file.split([' ', '\n']);
     file_iter.next(); //skip header
@@ -81,7 +82,7 @@ fn read_string_image(path: &Path) -> Canvas {
         println!("Iter size: {}", size);
         panic!("Some pixel data seems to be missing or the file might be corrupted.")
     };
-    let mut canvas = Canvas::new(width, height);
+    let mut canvas: Canvas<Vector3<u8>> = Canvas::new(width, height, vec3(0,0,0));
     for pixel in canvas.iter_mut() {
         *pixel = vec3(file_iter.next().unwrap().parse::<u8>().unwrap(),
             file_iter.next().unwrap().parse::<u8>().unwrap(),
@@ -92,8 +93,8 @@ fn read_string_image(path: &Path) -> Canvas {
 
 }
 
-/// This function parses a binary ppm file and creates a Canvas from it
-fn read_binary_image(file_iter: &mut Iter<'_, u8>) -> Canvas {
+/// This function parses a binary ppm file and creates a `Canvas<Vector3<u8>>` from it
+fn read_binary_image(file_iter: &mut Iter<'_, u8>) -> Canvas<Vector3<u8>> {
     let width_iter = file_iter.cloned().take_while(|e| (*e <= 57 && *e >= 48));
     let mut width_str: String = "".to_string();
     width_iter.for_each(|e| width_str.push(e as char));
@@ -115,7 +116,7 @@ fn read_binary_image(file_iter: &mut Iter<'_, u8>) -> Canvas {
         println!("Iter size: {}", size);
         panic!("Size issue")
     }
-    let mut canvas = Canvas::new(width, height);
+    let mut canvas: Canvas<Vector3<u8>> = Canvas::new(width, height, vec3(0,0,0));
     for pixel in canvas.iter_mut() {
         *pixel = vec3(*file_iter.next().unwrap(), *file_iter.next().unwrap(), *file_iter.next().unwrap());
     }

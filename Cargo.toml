@@ -1,7 +1,7 @@
 [package]
 name = "rusty-ppm"
 authors = ["Remi A. Godin"]
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "A simple PPM image reader and writer"
 repository = "https://github.com/Remi-Godin/rusty-ppm"
@@ -24,3 +24,4 @@ categories = [
 
 [dependencies]
 cgmath = "0.18.0"
+simple-canvas = "0.1.0"
