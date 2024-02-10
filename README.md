@@ -22,6 +22,7 @@ Machine specs:
 OS:   Pop!_OS 22.04 LTS x86_64
 Host: 20QNS00Q00 ThinkPad P53
 CPU:  Intel i5-9400H (8) @ 4.300GHz
+RAM: 8GB
 GPU1: Intel CoffeLake-H GT2 [UHD Graphics 630]
 GPU2: NVIDIA Quadro T1000 Mobile
 ```
